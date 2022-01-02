@@ -1,0 +1,7 @@
+{
+  "short_name": "COVID Test Locator",
+  "name": "COVID Test Locator",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone"
+}
