@@ -4,7 +4,8 @@
     {
       "files": ["*.test.ts[x]"],
       "rules": {
-        "node/no-unpublished-import": "off"
+        "node/no-unpublished-import": "off",
+        "@typescript-eslint/no-explicit-any": "off"
       }
     }
   ]

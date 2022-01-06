@@ -1,0 +1,32 @@
+{
+  "places": [
+    {
+      "id": 1,
+      "googlePlaceId": "ABC_DEF",
+      "name": "CVS Pharmacy",
+      "vicinity": "16 Boston Road, Chelmsford",
+      "location": {
+        "lat": 42.5951838,
+        "lng": -71.35117
+      }
+    },
+    {
+      "id": 2,
+      "googlePlaceId": "GHI_JKL",
+      "name": "Walgreens Pharmacy",
+      "vicinity": "86 Chelmsford Street, Chelmsford",
+      "location": {
+        "lat": 42.60175259999999,
+        "lng": -71.3475218
+      }
+    }
+  ],
+  "reports": [
+    {
+      "placeId": 2,
+      "created": "2022-01-02T14:44-04:00",
+      "available": true,
+      "type": "at-home rapid antigen test"
+    }
+  ]
+}
