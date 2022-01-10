@@ -5,7 +5,8 @@
     "jsx": "react-jsx",
     "lib": ["dom"],
     "outDir": "build",
-    "rootDir": "."
+    "rootDir": ".",
+    "resolveJsonModule": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

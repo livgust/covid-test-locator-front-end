@@ -163,7 +163,40 @@ describe('validation logic', () => {
       } as any as Place,
     ];
     render(<PlacesList places={places} />);
-    screen.queryByText('Validate Report')?.click();
+    screen.getByText('Validate Report').click();
     expect(screen.queryByText('1 validation(s)')).toBeInTheDocument();
+  });
+});
+
+describe('report logic', () => {
+  it('shows Update button', () => {
+    const places = [
+      {
+        id: 2,
+        googlePlaceId: 'ABC',
+        name: 'CVS',
+        vicinity: '123 Easy St., Rochester',
+        location: {lat: 100.0, long: -47.123},
+        reports: [],
+      } as Place,
+    ];
+    render(<PlacesList places={places} />);
+    expect(screen.queryByText('Add new report')).toBeInTheDocument();
+  });
+
+  it('shows report modal after pressing button', () => {
+    const places = [
+      {
+        id: 2,
+        googlePlaceId: 'ABC',
+        name: 'CVS',
+        vicinity: '123 Easy St., Rochester',
+        location: {lat: 100.0, long: -47.123},
+        reports: [],
+      } as Place,
+    ];
+    render(<PlacesList places={places} />);
+    screen.getByText('Add new report').click();
+    expect(screen.queryByText('Add report for CVS')).toBeInTheDocument();
   });
 });

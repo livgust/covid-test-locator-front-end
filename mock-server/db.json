@@ -23,10 +23,18 @@
   ],
   "reports": [
     {
+      "id": 1,
       "placeId": 2,
       "created": "2022-01-02T14:44-04:00",
       "available": true,
       "type": "at-home rapid antigen test"
+    },
+    {
+      "placeId": 1,
+      "available": false,
+      "type": "at-home rapid antigen test",
+      "limit": null,
+      "id": 2
     }
   ]
 }

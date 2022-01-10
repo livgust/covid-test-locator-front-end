@@ -1,3 +1,4 @@
 {
-  "/places": "/places?_embed=reports"
+  "/places": "/places?_embed=reports",
+  "/searchGooglePlaces*": "/places?_embed=reports"
 }

@@ -18,6 +18,16 @@ const theme = createTheme({
         },
       },
     },
+    MuiButton: {
+      defaultProps: {
+        variant: 'contained',
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: 'filled',
+      },
+    },
   },
 });
 

@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {Button} from '@mui/material';
 import {verifyReport} from '../api';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ValidateReport(props: {reportId: number; afterValidate?: () => any}) {
   const [hasValidated, setHasValidated] = useState(false);
   return (
@@ -16,6 +15,7 @@ function ValidateReport(props: {reportId: number; afterValidate?: () => any}) {
         setHasValidated(true);
         props.afterValidate?.();
       }}
+      sx={{mr: 2}}
     >
       {hasValidated ? 'Validated' : 'Validate Report'}
     </Button>
