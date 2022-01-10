@@ -19,11 +19,7 @@ function AddReport(props: {place?: Place; open: boolean; onClose: () => any}) {
         <DialogTitle>Add New Report</DialogTitle>
         <DialogContent>
           {!place ? (
-            <LocationSearch
-              longitude={0}
-              latitude={0}
-              onPlaceSelect={setPlace}
-            />
+            <LocationSearch onPlaceSelect={setPlace} />
           ) : (
             <ReportForm
               place={place}

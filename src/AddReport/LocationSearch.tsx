@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Box,
   Button,
@@ -11,20 +11,18 @@ import {
 } from '@mui/material';
 import {addPlace, searchPlaces} from '../api';
 import {Place} from '../types';
+import {LocationContext} from '../App';
 
 /**
- * @param props Takes a latitude and longitude to enable nearby searching, and
- *   onPlaceSelect which returns the Place that is selected when it is chosen.
+ * @param props Takes onPlaceSelect which returns the Place that is selected
+ *   when it is chosen.
  * @returns React Component that allows you to search for a location and
  *   requests that the server add the location.
  */
-function LocationSearch(props: {
-  latitude: number;
-  longitude: number;
-  onPlaceSelect?: (place: Place) => any;
-}) {
+function LocationSearch(props: {onPlaceSelect?: (place: Place) => any}) {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [results, setResults] = useState<Place[]>([]);
+  const {latitude, longitude} = useContext(LocationContext)!;
   return (
     <>
       <Box sx={{display: 'flex', alignItems: 'center'}}>
@@ -37,8 +35,8 @@ function LocationSearch(props: {
         <Button
           disabled={!searchTerm}
           onClick={() => {
-            searchPlaces({...props, keyword: searchTerm}).then(response =>
-              setResults(response)
+            searchPlaces({latitude, longitude, keyword: searchTerm}).then(
+              response => setResults(response)
             );
             return false;
           }}

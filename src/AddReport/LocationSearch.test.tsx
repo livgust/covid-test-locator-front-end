@@ -22,7 +22,7 @@ beforeEach(() => {
 
 it('starts with a search', () => {
   expect.assertions(2);
-  render(<LocationSearch latitude={123.456} longitude={-100.123} />);
+  render(<LocationSearch />);
   expect(screen.getByLabelText('Search for location')).toBeInTheDocument();
   fireEvent.change(screen.getByLabelText('Search for location'), {
     target: {value: 'cvs pharmacy'},
@@ -42,7 +42,7 @@ it('shows results', async () => {
       results: fakeResults,
     })
   );
-  render(<LocationSearch latitude={123.456} longitude={-100.123} />);
+  render(<LocationSearch />);
   expect(screen.getByLabelText('Search for location')).toBeInTheDocument();
   fireEvent.change(screen.getByLabelText('Search for location'), {
     target: {value: 'cvs pharmacy'},
@@ -64,7 +64,7 @@ describe('adds location only if ID is absent', () => {
         results: fakeResults,
       })
     );
-    render(<LocationSearch latitude={123.456} longitude={-100.123} />);
+    render(<LocationSearch />);
     fireEvent.change(screen.getByLabelText('Search for location'), {
       target: {value: 'cvs pharmacy'},
     });
@@ -83,7 +83,7 @@ describe('adds location only if ID is absent', () => {
         results: [{...fakeResults[0], id: 123}],
       })
     );
-    render(<LocationSearch latitude={123.456} longitude={-100.123} />);
+    render(<LocationSearch />);
     fireEvent.change(screen.getByLabelText('Search for location'), {
       target: {value: 'cvs pharmacy'},
     });
@@ -104,13 +104,7 @@ it('passes place info back up the chain', async () => {
     })
   );
   const returnFn = jest.fn();
-  render(
-    <LocationSearch
-      latitude={123.456}
-      longitude={-100.123}
-      onPlaceSelect={returnFn}
-    />
-  );
+  render(<LocationSearch onPlaceSelect={returnFn} />);
   fireEvent.change(screen.getByLabelText('Search for location'), {
     target: {value: 'cvs pharmacy'},
   });

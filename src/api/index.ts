@@ -1,7 +1,36 @@
 import {Place, Report} from '../types';
 
-export const getPlaces = async (): Promise<Place[]> => {
-  const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/places`);
+export const getPlaces = async ({
+  latitude,
+  longitude,
+}: {
+  latitude: number;
+  longitude: number;
+}): Promise<Place[]> => {
+  const response = await fetch(
+    `${process.env.REACT_APP_SERVER_URL}/places?latitude=${latitude}&longitude=${longitude}`
+  );
+  return response.json();
+};
+
+// https://developers.google.com/maps/documentation/places/web-service/search-nearby#PlaceSearchRequests
+// on server-side, map to Place with ID & report(s) if we have it, without ID if we don't.
+export const searchPlaces = async ({
+  latitude,
+  longitude,
+  keyword,
+}: {
+  latitude: number;
+  longitude: number;
+  keyword: string;
+}): Promise<Place[]> => {
+  const body = new URLSearchParams({
+    location: `${latitude},${longitude}`,
+    keyword,
+  }).toString();
+  const response = await fetch(
+    `${process.env.REACT_APP_SERVER_URL}/searchGooglePlaces?${body}`
+  );
   return response.json();
 };
 
@@ -41,25 +70,4 @@ export const addReport = async (report: Report): Promise<void> => {
     },
   });
   return;
-};
-
-// https://developers.google.com/maps/documentation/places/web-service/search-nearby#PlaceSearchRequests
-// on server-side, map to Place with ID & report(s) if we have it, without ID if we don't.
-export const searchPlaces = async ({
-  latitude,
-  longitude,
-  keyword,
-}: {
-  latitude: number;
-  longitude: number;
-  keyword: string;
-}): Promise<Place[]> => {
-  const body = new URLSearchParams({
-    location: `${latitude},${longitude}`,
-    keyword,
-  }).toString();
-  const response = await fetch(
-    `${process.env.REACT_APP_SERVER_URL}/searchGooglePlaces?${body}`
-  );
-  return response.json();
 };

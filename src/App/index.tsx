@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import {
   AppBar,
   CircularProgress,
@@ -40,17 +40,21 @@ function Menu() {
   );
 }
 
+type userLocationType = {latitude: number; longitude: number} | undefined;
+
+export const LocationContext = createContext<userLocationType>(undefined);
+
 function MainComponent() {
   const [isLoading, setIsLoading] = useState(true);
   const [places, setPlaces] = useState<Place[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogPlace, setDialogPlace] = useState<Place | undefined>();
-  const [userLocation, setUserLocation] =
-    useState<{lat: number; long: number}>();
+  const [userLocation, setUserLocation] = useState<userLocationType>();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(geo => {
-      setUserLocation({lat: geo.coords.latitude, long: geo.coords.longitude});
+      const {latitude, longitude} = geo.coords;
+      setUserLocation({latitude, longitude});
       setIsLoading(false);
       setPlaces([]);
     });
@@ -58,10 +62,14 @@ function MainComponent() {
 
   useEffect(() => {
     setIsLoading(true);
-    getPlaces().then(retrievedPlaces => {
-      setPlaces(retrievedPlaces);
+    if (userLocation) {
+      getPlaces(userLocation).then(retrievedPlaces => {
+        setPlaces(retrievedPlaces);
+        setIsLoading(false);
+      });
+    } else {
       setIsLoading(false);
-    });
+    }
     return;
   }, [userLocation]);
 
@@ -75,8 +83,8 @@ function MainComponent() {
     <div>
       {isLoading ? (
         <CircularProgress />
-      ) : userLocation && userLocation?.lat && userLocation?.long ? (
-        <>
+      ) : userLocation && userLocation?.latitude && userLocation?.longitude ? (
+        <LocationContext.Provider value={userLocation}>
           <Fab
             onClick={() => setDialogOpen(true)}
             color="primary"
@@ -100,9 +108,20 @@ function MainComponent() {
             Innovations, LLC. The information shown may be outdated or incorrect
             and is not sanctioned by any government entity.
           </Typography>
-        </>
+        </LocationContext.Provider>
       ) : (
-        <Typography>Please set your location.</Typography>
+        <Typography>
+          Please set your location. If you do not see a prompt for this page to
+          get your location,{' '}
+          <a
+            href="https://www.lifewire.com/denying-access-to-your-location-4027789"
+            target="_blank"
+            rel="noreferrer"
+          >
+            click here for instructions
+          </a>
+          .
+        </Typography>
       )}
     </div>
   );
