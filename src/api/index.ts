@@ -46,28 +46,34 @@ export const addPlace = async (place: Place): Promise<Place> => {
   return response.json() as Promise<Place>;
 };
 
-export const verifyReport = async (reportId: number): Promise<void> => {
-  await fetch(`${process.env.REACT_APP_SERVER_URL}/reportValidations`, {
-    method: 'POST',
-    body: JSON.stringify({
-      reportId,
-    }),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
+export const verifyReport = async (report: Report): Promise<void> => {
+  await fetch(
+    `${process.env.REACT_APP_SERVER_URL}/places/${report.placeId}/reports/${report.id}/reportValidations`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        reportId: report.id,
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }
+  );
   return;
 };
 
 export const addReport = async (report: Report): Promise<void> => {
-  await fetch(`${process.env.REACT_APP_SERVER_URL}/reports`, {
-    method: 'POST',
-    body: JSON.stringify(report),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
+  await fetch(
+    `${process.env.REACT_APP_SERVER_URL}/places/${report.placeId}/reports`,
+    {
+      method: 'POST',
+      body: JSON.stringify(report),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }
+  );
   return;
 };
