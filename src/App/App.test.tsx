@@ -20,7 +20,7 @@ describe('Initialization logic', () => {
     (getPlaces as jest.Mock).mockImplementation(async () => []);
   });
   it('fetches reports before rendering', async () => {
-    render(<App />);
+    render(<App location={{latitude: 1, longitude: 1}} />);
     await waitFor(() => expect(getPlaces).toHaveBeenCalled());
   });
 
@@ -30,7 +30,7 @@ describe('Initialization logic', () => {
       expect(screen.queryByRole('progressbar')).toBeInTheDocument();
       return [];
     });
-    render(<App />);
+    render(<App location={{latitude: 1, longitude: 1}} />);
     await waitFor(() => expect(getPlaces).toHaveBeenCalled());
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
   });
@@ -44,7 +44,7 @@ describe('Initialization logic', () => {
     (getPlaces as jest.Mock).mockImplementationOnce(async () => {
       return ['report 1', 'report 2'];
     });
-    render(<App />);
+    render(<App location={{latitude: 1, longitude: 1}} />);
     await waitFor(() => expect(getPlaces).toHaveBeenCalled());
     await waitFor(() =>
       expect(placesListPlacesProp).toEqual(['report 1', 'report 2'])

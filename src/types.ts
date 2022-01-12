@@ -24,7 +24,14 @@ export type Report = {
     | 'rapid antigen test'
     | 'rapid PCR test'
     | 'PCR test';
-  validationCount?: number;
+  validations?: ReportValidation[];
   limit?: number;
   quantity?: 'S' | 'M' | 'L' | 'XL';
+};
+
+export type ReportValidation = {
+  id?: number;
+  reportId: number;
+  created?: string;
+  createdBy?: string;
 };

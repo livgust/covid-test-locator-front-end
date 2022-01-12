@@ -15,11 +15,12 @@ import {Place} from '../types';
 import {ThemeProvider} from '@mui/material/styles';
 import themeTemplate from '../theme';
 
-function App() {
+// location prop is for testing only.
+function App(props: {location?: {latitude: number; longitude: number}}) {
   return (
     <ThemeProvider theme={themeTemplate}>
       <Menu />
-      <MainComponent />
+      <MainComponent location={props.location} />
     </ThemeProvider>
   );
 }
@@ -44,20 +45,29 @@ type userLocationType = {latitude: number; longitude: number} | undefined;
 
 export const LocationContext = createContext<userLocationType>(undefined);
 
-function MainComponent() {
+// location prop is for testing only.
+function MainComponent(props: {
+  location?: {latitude: number; longitude: number};
+}) {
   const [isLoading, setIsLoading] = useState(true);
   const [places, setPlaces] = useState<Place[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogPlace, setDialogPlace] = useState<Place | undefined>();
-  const [userLocation, setUserLocation] = useState<userLocationType>();
+  const [userLocation, setUserLocation] = useState<userLocationType>(
+    props.location
+  );
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(geo => {
-      const {latitude, longitude} = geo.coords;
-      setUserLocation({latitude, longitude});
-      setIsLoading(false);
-      setPlaces([]);
-    });
+    if (!props.location?.latitude || !props.location?.longitude) {
+      navigator.geolocation.getCurrentPosition(geo => {
+        const {latitude, longitude} = geo.coords;
+        console.log('USER LOCATION IS....');
+        console.log({latitude, longitude});
+        setUserLocation({latitude, longitude});
+        setIsLoading(false);
+        setPlaces([]);
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -68,6 +78,7 @@ function MainComponent() {
         setIsLoading(false);
       });
     } else {
+      console.log('NO USER LOCATION SET');
       setIsLoading(false);
     }
     return;

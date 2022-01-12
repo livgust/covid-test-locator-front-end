@@ -45,7 +45,7 @@ function PlaceItem(props: {place: Place}) {
   );
 
   const validationCount =
-    (newestReport?.validationCount || 0) + extraValidationCount;
+    (newestReport?.validations?.length || 0) + extraValidationCount;
 
   return (
     <>
@@ -67,7 +67,7 @@ function PlaceItem(props: {place: Place}) {
           <br />
           {newestReport && (
             <ValidateReport
-              reportId={newestReport.id!}
+              report={newestReport}
               afterValidate={() => {
                 setExtraValidationCount(1);
               }}

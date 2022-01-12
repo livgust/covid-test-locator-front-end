@@ -29,16 +29,17 @@ function LocationSearch(props: {onPlaceSelect?: (place: Place) => any}) {
         <TextField
           label="Search for location"
           value={searchTerm}
-          onChange={event => setSearchTerm(event.target.value.trim())}
+          onChange={event => setSearchTerm(event.target.value)}
           sx={{flexGrow: 1}}
         />
         <Button
-          disabled={!searchTerm}
+          disabled={!searchTerm.trim()}
           onClick={() => {
-            searchPlaces({latitude, longitude, keyword: searchTerm}).then(
-              response => setResults(response)
-            );
-            return false;
+            searchPlaces({
+              latitude,
+              longitude,
+              keyword: searchTerm.trim(),
+            }).then(setResults);
           }}
           sx={{ml: '5px'}}
         >

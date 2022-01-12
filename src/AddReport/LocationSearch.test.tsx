@@ -2,6 +2,7 @@ import React from 'react';
 import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import LocationSearch from './LocationSearch';
 import {addPlace, searchPlaces} from '../api';
+import {LocationContext} from '../App';
 
 jest.mock('../api');
 
@@ -15,22 +16,25 @@ const fakeResults = [
 ];
 
 beforeEach(() => {
-  (searchPlaces as jest.Mock).mockImplementation(() =>
-    Promise.resolve({results: []})
-  );
+  (searchPlaces as jest.Mock).mockClear();
+  (searchPlaces as jest.Mock).mockImplementation(() => Promise.resolve([]));
 });
 
 it('starts with a search', () => {
   expect.assertions(2);
-  render(<LocationSearch />);
+  render(
+    <LocationContext.Provider value={{latitude: 1, longitude: 1}}>
+      <LocationSearch />
+    </LocationContext.Provider>
+  );
   expect(screen.getByLabelText('Search for location')).toBeInTheDocument();
   fireEvent.change(screen.getByLabelText('Search for location'), {
     target: {value: 'cvs pharmacy'},
   });
   act(() => screen.getByText('Search').click());
   expect(searchPlaces).toHaveBeenCalledWith({
-    latitude: 123.456,
-    longitude: -100.123,
+    latitude: 1,
+    longitude: 1,
     keyword: 'cvs pharmacy',
   });
 });
@@ -38,11 +42,13 @@ it('starts with a search', () => {
 it('shows results', async () => {
   expect.assertions(5);
   (searchPlaces as jest.Mock).mockImplementationOnce(() =>
-    Promise.resolve({
-      results: fakeResults,
-    })
+    Promise.resolve(fakeResults)
   );
-  render(<LocationSearch />);
+  render(
+    <LocationContext.Provider value={{latitude: 1, longitude: 1}}>
+      <LocationSearch />
+    </LocationContext.Provider>
+  );
   expect(screen.getByLabelText('Search for location')).toBeInTheDocument();
   fireEvent.change(screen.getByLabelText('Search for location'), {
     target: {value: 'cvs pharmacy'},
@@ -60,11 +66,13 @@ describe('adds location only if ID is absent', () => {
   it('adds location', async () => {
     expect.assertions(2);
     (searchPlaces as jest.Mock).mockImplementationOnce(() =>
-      Promise.resolve({
-        results: fakeResults,
-      })
+      Promise.resolve(fakeResults)
     );
-    render(<LocationSearch />);
+    render(
+      <LocationContext.Provider value={{latitude: 1, longitude: 1}}>
+        <LocationSearch />
+      </LocationContext.Provider>
+    );
     fireEvent.change(screen.getByLabelText('Search for location'), {
       target: {value: 'cvs pharmacy'},
     });
@@ -79,11 +87,13 @@ describe('adds location only if ID is absent', () => {
   it('does not add location', async () => {
     expect.assertions(2);
     (searchPlaces as jest.Mock).mockImplementationOnce(() =>
-      Promise.resolve({
-        results: [{...fakeResults[0], id: 123}],
-      })
+      Promise.resolve([{...fakeResults[0], id: 123}])
     );
-    render(<LocationSearch />);
+    render(
+      <LocationContext.Provider value={{latitude: 1, longitude: 1}}>
+        <LocationSearch />
+      </LocationContext.Provider>
+    );
     fireEvent.change(screen.getByLabelText('Search for location'), {
       target: {value: 'cvs pharmacy'},
     });
@@ -99,12 +109,14 @@ describe('adds location only if ID is absent', () => {
 it('passes place info back up the chain', async () => {
   expect.assertions(2);
   (searchPlaces as jest.Mock).mockImplementationOnce(() =>
-    Promise.resolve({
-      results: fakeResults,
-    })
+    Promise.resolve(fakeResults)
   );
   const returnFn = jest.fn();
-  render(<LocationSearch onPlaceSelect={returnFn} />);
+  render(
+    <LocationContext.Provider value={{latitude: 1, longitude: 1}}>
+      <LocationSearch onPlaceSelect={returnFn} />
+    </LocationContext.Provider>
+  );
   fireEvent.change(screen.getByLabelText('Search for location'), {
     target: {value: 'cvs pharmacy'},
   });

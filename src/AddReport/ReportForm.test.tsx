@@ -41,6 +41,7 @@ describe('form logic', () => {
   });
 
   it('fills out and submits report, then calls handler', async () => {
+    (addReport as jest.Mock).mockImplementation(() => Promise.resolve());
     const onSubmission = jest.fn();
     render(
       <ReportForm

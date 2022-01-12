@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {Button} from '@mui/material';
 import {verifyReport} from '../api';
+import {Report} from '../types';
 
-function ValidateReport(props: {reportId: number; afterValidate?: () => any}) {
+function ValidateReport(props: {report: Report; afterValidate?: () => any}) {
   const [hasValidated, setHasValidated] = useState(false);
   return (
     <Button
@@ -11,7 +12,7 @@ function ValidateReport(props: {reportId: number; afterValidate?: () => any}) {
         // assumes this will always work;
         // shows success behavior immediately
         // and doesn't verify the response
-        verifyReport(props.reportId);
+        verifyReport(props.report);
         setHasValidated(true);
         props.afterValidate?.();
       }}
