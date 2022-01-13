@@ -13,8 +13,6 @@ export const getPlaces = async ({
   return response.json();
 };
 
-// https://developers.google.com/maps/documentation/places/web-service/search-nearby#PlaceSearchRequests
-// on server-side, map to Place with ID & report(s) if we have it, without ID if we don't.
 export const searchPlaces = async ({
   latitude,
   longitude,

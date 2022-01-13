@@ -62,50 +62,6 @@ it('shows results', async () => {
   expect(screen.queryByText('Select')).toBeInTheDocument();
 });
 
-describe('adds location only if ID is absent', () => {
-  it('adds location', async () => {
-    expect.assertions(2);
-    (searchPlaces as jest.Mock).mockImplementationOnce(() =>
-      Promise.resolve(fakeResults)
-    );
-    render(
-      <LocationContext.Provider value={{latitude: 1, longitude: 1}}>
-        <LocationSearch />
-      </LocationContext.Provider>
-    );
-    fireEvent.change(screen.getByLabelText('Search for location'), {
-      target: {value: 'cvs pharmacy'},
-    });
-    act(() => {
-      screen.getByText('Search').click();
-    });
-    await waitFor(() => expect(searchPlaces).toHaveBeenCalled());
-    screen.getByText('Select').click();
-    expect(addPlace).toHaveBeenCalled();
-  });
-
-  it('does not add location', async () => {
-    expect.assertions(2);
-    (searchPlaces as jest.Mock).mockImplementationOnce(() =>
-      Promise.resolve([{...fakeResults[0], id: 123}])
-    );
-    render(
-      <LocationContext.Provider value={{latitude: 1, longitude: 1}}>
-        <LocationSearch />
-      </LocationContext.Provider>
-    );
-    fireEvent.change(screen.getByLabelText('Search for location'), {
-      target: {value: 'cvs pharmacy'},
-    });
-    act(() => {
-      screen.getByText('Search').click();
-    });
-    await waitFor(() => expect(searchPlaces).toHaveBeenCalled());
-    screen.getByText('Select').click();
-    expect(addPlace).not.toHaveBeenCalled();
-  });
-});
-
 it('passes place info back up the chain', async () => {
   expect.assertions(2);
   (searchPlaces as jest.Mock).mockImplementationOnce(() =>

@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {addPlace, searchPlaces} from '../api';
+import {searchPlaces} from '../api';
 import {Place} from '../types';
 import {LocationContext} from '../App';
 
@@ -60,10 +60,7 @@ function LocationSearch(props: {onPlaceSelect?: (place: Place) => any}) {
                 <Box>
                   <Button
                     color="secondary"
-                    onClick={() => {
-                      if (!place.id) {
-                        addPlace(place); // async function - we don't wait for it to resolve
-                      }
+                    onClick={async () => {
                       if (props.onPlaceSelect) {
                         props.onPlaceSelect(place);
                       }

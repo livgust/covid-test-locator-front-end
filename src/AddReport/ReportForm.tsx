@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Place, Report} from '../types';
-import {addReport} from '../api';
+import {addReport, addPlace} from '../api';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
@@ -31,17 +31,25 @@ function ReportForm(props: {
   }, [testsAvailableRadio]);
 
   const submitForm = async () => {
-    const placeId = props.place.id;
-    const promise = new Promise<void>(resolve => {
-      addReport({
-        placeId,
-        available: testsAvailableRadio === 'Tests available',
-        type: 'at-home rapid antigen test',
-        limit: parseInt(limitNumber),
-      } as Report).then(() => resolve());
+    const getPlacePromise = new Promise<number>(resolve => {
+      if (props.place.id) {
+        resolve(props.place.id);
+      } else {
+        addPlace(props.place).then(place => resolve(place.id!));
+      }
     });
+    const returnPromise = getPlacePromise
+      .then(placeId =>
+        addReport({
+          placeId,
+          available: testsAvailableRadio === 'Tests available',
+          type: 'at-home rapid antigen test',
+          limit: parseInt(limitNumber),
+        } as Report)
+      )
+      .then(() => {});
     if (props.onSubmission) {
-      props.onSubmission(promise);
+      props.onSubmission(returnPromise);
     }
     return;
   };

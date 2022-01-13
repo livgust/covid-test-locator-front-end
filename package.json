@@ -26,9 +26,9 @@
     "web-vitals": "^2.1.2"
   },
   "scripts": {
-    "start": "npm-run-all -p -r start:mock-server start:app",
-    "start:app": "cross-env REACT_APP_SERVER_URL=\"http://localhost:3001\" react-scripts start",
-    "start:mock-server": "json-server --watch mock-server/db.json --port 3001 --routes mock-server/routes.json",
+    "start": "react-scripts start",
+    "start:mock": "cross-env REACT_APP_SERVER_URL=\"http://localhost:3001\" npm-run-all -p -r start:json-server start",
+    "start:json-server": "json-server --watch mock-server/db.json --port 3001 --routes mock-server/routes.json",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

@@ -1,10 +1,7 @@
 import React from 'react';
 import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import ReportForm from './ReportForm';
-import {addReport} from '../api';
 import {Place} from '../types';
-
-jest.mock('../api');
 
 const onBack = () => {};
 
@@ -41,7 +38,6 @@ describe('form logic', () => {
   });
 
   it('fills out and submits report, then calls handler', async () => {
-    (addReport as jest.Mock).mockImplementation(() => Promise.resolve());
     const onSubmission = jest.fn();
     render(
       <ReportForm
@@ -55,12 +51,6 @@ describe('form logic', () => {
       target: {value: '1'},
     });
     act(() => screen.getByText('Submit').click());
-    expect(addReport).toHaveBeenCalledWith({
-      placeId: 1,
-      available: true,
-      type: 'at-home rapid antigen test',
-      limit: 1,
-    });
     await waitFor(() => expect(onSubmission).toHaveBeenCalled());
   });
 });

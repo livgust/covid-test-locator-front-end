@@ -31,7 +31,7 @@ function PlaceItem(props: {place: Place}) {
   const [showAddReport, setShowAddReport] = useState(false);
 
   const newestReport = place!.reports!.sort((a, b) =>
-    a.created! < b.created! ? -1 : 1
+    a.created! > b.created! ? -1 : 1
   )?.[0];
   const availabilityText = newestReport
     ? newestReport.available
