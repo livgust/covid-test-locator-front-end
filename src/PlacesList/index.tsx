@@ -27,25 +27,50 @@ function PlacesList(props: {places: Place[]}) {
 function PlaceItem(props: {place: Place}) {
   const place = props.place;
 
-  const [extraValidationCount, setExtraValidationCount] = useState(0);
+  const [validatedByUser, setValidatedByUser] = useState(false);
   const [showAddReport, setShowAddReport] = useState(false);
 
-  const newestReport = place!.reports!.sort((a, b) =>
-    a.created! > b.created! ? -1 : 1
+  const newestReport = place!.reports!.sort((repA, repB) =>
+    repA.created! > repB.created! ? -1 : 1
   )?.[0];
-  const availabilityText = newestReport
-    ? newestReport.available
+  const newestValidation = (newestReport?.validations || []).sort(
+    (valA, valB) => (valA.created! > valB.created! ? -1 : 1)
+  )?.[0];
+  const availabilityText =
+    newestReport?.available && newestReport.limit
+      ? `Tests available - limit ${newestReport.limit} per customer`
+      : newestReport?.available
       ? 'Tests available'
-      : 'Tests not available'
-    : 'Test availability unknown';
+      : 'Tests not available';
+  const availabilityHtml = newestReport ? (
+    <Typography
+      sx={{color: newestReport.available ? 'success.main' : 'text.secondary'}}
+    >
+      {availabilityText}
+    </Typography>
+  ) : (
+    <Typography sx={{color: 'text.disabled'}}>
+      Test availability unknown
+    </Typography>
+  );
+  const validationCopy = validatedByUser
+    ? '; last validated just now'
+    : newestValidation
+    ? `; last validated ${formatDistanceToNow(
+        new Date(newestValidation.created!)
+      )} ago`
+    : '';
   const reportedCopy = newestReport?.created && (
-    <Typography>{`Reported ${formatDistanceToNow(
+    <Typography variant="subtitle2">{`Reported ${formatDistanceToNow(
       new Date(newestReport.created)
-    )} ago`}</Typography>
+    )} ago${validationCopy}`}</Typography>
   );
 
   const validationCount =
-    (newestReport?.validations?.length || 0) + extraValidationCount;
+    (newestReport?.validations?.length || 0) + (validatedByUser ? 1 : 0);
+
+  // for pluralizing copy
+  const addS = validationCount > 1 ? 's' : '';
 
   return (
     <>
@@ -55,13 +80,15 @@ function PlaceItem(props: {place: Place}) {
             {place.name}
           </Typography>
           <Typography variant="subtitle1">{place.vicinity}</Typography>
-          <Typography>{availabilityText}</Typography>
+          {availabilityHtml}
           {reportedCopy}
           {newestReport && (
             <Typography variant="subtitle2">
               {validationCount
-                ? `${validationCount} validation(s)`
-                : 'No validations yet'}
+                ? `${validationCount} user${addS} ${
+                    addS ? 'have' : 'has'
+                  } validated this report so far.`
+                : 'No other users have validated this report yet.'}
             </Typography>
           )}
           <br />
@@ -69,7 +96,7 @@ function PlaceItem(props: {place: Place}) {
             <ValidateReport
               report={newestReport}
               afterValidate={() => {
-                setExtraValidationCount(1);
+                setValidatedByUser(true);
               }}
             />
           )}

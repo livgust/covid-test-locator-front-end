@@ -1,6 +1,8 @@
 import React, {createContext, useEffect, useState} from 'react';
 import {
+  Alert,
   AppBar,
+  Box,
   CircularProgress,
   Fab,
   Toolbar,
@@ -31,7 +33,7 @@ function Menu() {
       <AppBar position="fixed" component="div">
         <Toolbar>
           <Typography variant="h5" component="h1">
-            Find a COVID Test
+            Covid Test Collaborative
           </Typography>
         </Toolbar>
       </AppBar>
@@ -93,46 +95,65 @@ function MainComponent(props: {
   return (
     <div>
       {isLoading ? (
-        <CircularProgress />
-      ) : userLocation && userLocation?.latitude && userLocation?.longitude ? (
-        <LocationContext.Provider value={userLocation}>
-          <Fab
-            onClick={() => setDialogOpen(true)}
-            color="primary"
-            aria-label="add"
-            sx={{
-              position: 'fixed',
-              bottom: 20,
-              right: 20,
-            }}
-          >
-            <AddIcon />
-          </Fab>
-          <AddReport
-            place={dialogPlace}
-            open={dialogOpen}
-            onClose={() => setDialogOpen(false)}
-          />
-          <PlacesList {...{places}} />
-          <Typography variant="caption">
-            Content displayed is sourced by the community and not vetted by Ora
-            Innovations, LLC. The information shown may be outdated or incorrect
-            and is not sanctioned by any government entity.
-          </Typography>
-        </LocationContext.Provider>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress />
+        </Box>
       ) : (
-        <Typography>
-          Please set your location. If you do not see a prompt for this page to
-          get your location,{' '}
-          <a
-            href="https://www.lifewire.com/denying-access-to-your-location-4027789"
-            target="_blank"
-            rel="noreferrer"
-          >
-            click here for instructions
-          </a>
-          .
-        </Typography>
+        <>
+          <Alert severity="info">
+            CovidTestCollab.com hosts a crowd-sourced list of at-home COVID
+            rapid tests available for purchase in-store. If you know that a
+            store near you does or does not have tests available, please add a
+            report by clicking the + icon in the bottom right of your screen.
+          </Alert>
+          {userLocation && userLocation?.latitude && userLocation?.longitude ? (
+            <LocationContext.Provider value={userLocation}>
+              <Fab
+                onClick={() => setDialogOpen(true)}
+                color="primary"
+                aria-label="add"
+                sx={{
+                  position: 'fixed',
+                  bottom: 20,
+                  right: 20,
+                }}
+              >
+                <AddIcon />
+              </Fab>
+              <AddReport
+                place={dialogPlace}
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+              />
+              <PlacesList {...{places}} />
+              <Typography variant="caption">
+                Content displayed is sourced by the community and not vetted by
+                Ora Innovations, LLC. The information shown may be outdated or
+                incorrect. This website is not affiliated with any government
+                entity.
+              </Typography>
+            </LocationContext.Provider>
+          ) : (
+            <Alert severity="error">
+              Please set your location. If you do not see a prompt for this page
+              to get your location,{' '}
+              <a
+                href="https://www.lifewire.com/denying-access-to-your-location-4027789"
+                target="_blank"
+                rel="noreferrer"
+              >
+                click here for instructions
+              </a>
+              .
+            </Alert>
+          )}
+        </>
       )}
     </div>
   );

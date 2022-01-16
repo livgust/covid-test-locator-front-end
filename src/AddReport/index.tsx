@@ -42,7 +42,7 @@ function AddReport(props: {place?: Place; open: boolean; onClose: () => any}) {
         open={showToast}
         autoHideDuration={6000}
         onClose={() => setShowToast(false)}
-        message="Report added"
+        message="Thanks for your report. Refresh the page to see it!"
       />
     </>
   );

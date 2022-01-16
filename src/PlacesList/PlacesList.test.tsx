@@ -100,13 +100,19 @@ describe('validation logic', () => {
             placeId: 2,
             available: true,
             created: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"),
-            validations: [{}, {}, {}],
+            validations: [
+              {created: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")},
+              {created: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")},
+              {created: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")},
+            ],
           },
         ],
       } as any as Place,
     ];
     render(<PlacesList places={places} />);
-    expect(screen.queryByText('3 validation(s)')).toBeInTheDocument();
+    expect(
+      screen.queryByText('3 users have validated this report so far.')
+    ).toBeInTheDocument();
   });
 
   it('shows no-validation copy', () => {
@@ -125,7 +131,9 @@ describe('validation logic', () => {
       } as any as Place,
     ];
     render(<PlacesList places={places} />);
-    expect(screen.queryByText('No validations yet')).toBeInTheDocument();
+    expect(
+      screen.queryByText('No other users have validated this report yet.')
+    ).toBeInTheDocument();
   });
 
   it('shows validate button if a report appears', () => {
@@ -163,7 +171,9 @@ describe('validation logic', () => {
     ];
     render(<PlacesList places={places} />);
     screen.getByText('Validate Report').click();
-    expect(screen.queryByText('1 validation(s)')).toBeInTheDocument();
+    expect(
+      screen.queryByText('1 user has validated this report so far.')
+    ).toBeInTheDocument();
   });
 });
 
