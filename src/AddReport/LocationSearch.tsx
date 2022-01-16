@@ -22,6 +22,7 @@ import {LocationContext} from '../App';
 function LocationSearch(props: {onPlaceSelect?: (place: Place) => any}) {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [results, setResults] = useState<Place[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const {latitude, longitude} = useContext(LocationContext)!;
   return (
     <>
@@ -33,19 +34,24 @@ function LocationSearch(props: {onPlaceSelect?: (place: Place) => any}) {
           sx={{flexGrow: 1}}
         />
         <Button
-          disabled={!searchTerm.trim()}
+          disabled={!searchTerm.trim() || isSearching}
           onClick={() => {
+            setIsSearching(true);
             searchPlaces({
               latitude,
               longitude,
               keyword: searchTerm.trim(),
-            }).then(setResults);
+            }).then(results => {
+              setResults(results);
+              setIsSearching(false);
+            });
           }}
           sx={{ml: '5px'}}
         >
           Search
         </Button>
       </Box>
+      {isSearching && <Typography>Searching . . .</Typography>}
       <List>
         {results.map(place => (
           <div key={place.googlePlaceId}>
@@ -53,8 +59,12 @@ function LocationSearch(props: {onPlaceSelect?: (place: Place) => any}) {
               <Box sx={{display: 'flex', alignItems: 'center', width: '100%'}}>
                 <Box sx={{flexGrow: 1}}>
                   <ListItemText>
-                    <Typography>{place.name}</Typography>
-                    <Typography>{place.vicinity}</Typography>
+                    <Typography variant="h5" component="div">
+                      {place.name}
+                    </Typography>
+                    <Typography variant="subtitle1" component="div">
+                      {place.vicinity}
+                    </Typography>
                   </ListItemText>
                 </Box>
                 <Box>
