@@ -114,22 +114,28 @@ function MainComponent(props: {
             CovidTestCollab.com hosts a crowd-sourced list of at-home COVID
             rapid tests available for purchase in-store. If you know that a
             store near you does or does not have tests available, please add a
-            report by clicking the + icon in the bottom right of your screen.
+            report by clicking the + icon below.
           </Alert>
           {userLocation && userLocation?.latitude && userLocation?.longitude ? (
             <LocationContext.Provider value={userLocation}>
-              <Fab
-                onClick={() => setDialogOpen(true)}
-                color="primary"
-                aria-label="add"
+              <Box
                 sx={{
-                  position: 'fixed',
-                  bottom: 20,
-                  right: 20,
+                  display: 'flex',
+                  width: '100%',
+                  justifyContent: 'center',
+                  pt: 2,
                 }}
               >
-                <AddIcon />
-              </Fab>
+                <Fab
+                  variant="extended"
+                  onClick={() => setDialogOpen(true)}
+                  color="primary"
+                  aria-label="add"
+                >
+                  <AddIcon />
+                  Add Report
+                </Fab>
+              </Box>
               <AddReport
                 place={dialogPlace}
                 open={dialogOpen}

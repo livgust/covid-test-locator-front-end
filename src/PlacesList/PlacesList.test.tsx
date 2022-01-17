@@ -111,7 +111,7 @@ describe('validation logic', () => {
     ];
     render(<PlacesList places={places} />);
     expect(
-      screen.queryByText('3 users have validated this report so far.')
+      screen.queryByText('3 users have confirmed this report so far.')
     ).toBeInTheDocument();
   });
 
@@ -132,7 +132,7 @@ describe('validation logic', () => {
     ];
     render(<PlacesList places={places} />);
     expect(
-      screen.queryByText('No other users have validated this report yet.')
+      screen.queryByText('No other users have confirmed this report yet.')
     ).toBeInTheDocument();
   });
 
@@ -152,7 +152,7 @@ describe('validation logic', () => {
       } as any as Place,
     ];
     render(<PlacesList places={places} />);
-    expect(screen.queryByText('Validate Report')).toBeInTheDocument();
+    expect(screen.queryByText('This is right')).toBeInTheDocument();
   });
 
   it('increases validation count after pressing button', () => {
@@ -170,9 +170,9 @@ describe('validation logic', () => {
       } as any as Place,
     ];
     render(<PlacesList places={places} />);
-    screen.getByText('Validate Report').click();
+    screen.getByText('This is right').click();
     expect(
-      screen.queryByText('1 user has validated this report so far.')
+      screen.queryByText('1 user has confirmed this report so far.')
     ).toBeInTheDocument();
   });
 });
@@ -190,7 +190,7 @@ describe('report logic', () => {
       } as Place,
     ];
     render(<PlacesList places={places} />);
-    expect(screen.queryByText('Add new report')).toBeInTheDocument();
+    expect(screen.queryByText("This isn't right")).toBeInTheDocument();
   });
 
   it('shows report modal after pressing button', () => {
@@ -205,7 +205,7 @@ describe('report logic', () => {
       } as Place,
     ];
     render(<PlacesList places={places} />);
-    screen.getByText('Add new report').click();
+    screen.getByText("This isn't right").click();
     expect(screen.queryByText('Add report for CVS')).toBeInTheDocument();
   });
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import LocationSearch from './LocationSearch';
-import {addPlace, searchPlaces} from '../api';
+import {searchPlaces} from '../api';
 import {LocationContext} from '../App';
 
 jest.mock('../api');
@@ -80,7 +80,9 @@ it('passes place info back up the chain', async () => {
     screen.getByText('Search').click();
   });
   await waitFor(() => expect(searchPlaces).toHaveBeenCalled());
-  screen.getByText('Select').click();
+  act(() => {
+    screen.getByText('Select').click();
+  });
   expect(returnFn).toHaveBeenCalledWith({
     name: 'Cruise Bar',
     googlePlaceId: 'ChIJi6C1MxquEmsR9-c-3O48ykI',

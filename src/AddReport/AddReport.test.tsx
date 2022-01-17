@@ -1,4 +1,4 @@
-import React, {createContext} from 'react';
+import React from 'react';
 import {render, screen} from '@testing-library/react';
 import AddReport from '../AddReport';
 import {searchPlaces} from '../api';
@@ -54,5 +54,8 @@ it('has expected modal copy & fields after search is completed', () => {
   expect(screen.queryByLabelText('Tests available')).toBeInTheDocument();
   expect(screen.queryByLabelText('No tests available')).toBeInTheDocument();
   expect(screen.queryByLabelText('Limit per customer')).toBeInTheDocument();
+  expect(
+    screen.queryByLabelText('Date and time of report')
+  ).toBeInTheDocument();
   expect(screen.queryByText('Submit')).toBeInTheDocument();
 });

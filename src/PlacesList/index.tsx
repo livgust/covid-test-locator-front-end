@@ -54,9 +54,9 @@ function PlaceItem(props: {place: Place}) {
     </Typography>
   );
   const validationCopy = validatedByUser
-    ? '; last validated just now'
+    ? '; last confirmed just now'
     : newestValidation
-    ? `; last validated ${formatDistanceToNow(
+    ? `; last confirmed ${formatDistanceToNow(
         new Date(newestValidation.created!)
       )} ago`
     : '';
@@ -87,8 +87,8 @@ function PlaceItem(props: {place: Place}) {
               {validationCount
                 ? `${validationCount} user${addS} ${
                     addS ? 'have' : 'has'
-                  } validated this report so far.`
-                : 'No other users have validated this report yet.'}
+                  } confirmed this report so far.`
+                : 'No other users have confirmed this report yet.'}
             </Typography>
           )}
           <br />
@@ -101,7 +101,7 @@ function PlaceItem(props: {place: Place}) {
             />
           )}
           <Button color="secondary" onClick={() => setShowAddReport(true)}>
-            Add new report
+            This isn't right
           </Button>
         </CardContent>
       </Card>

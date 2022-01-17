@@ -18,7 +18,7 @@ function ValidateReport(props: {report: Report; afterValidate?: () => any}) {
       }}
       sx={{mr: 2}}
     >
-      {hasValidated ? 'Validated' : 'Validate Report'}
+      {hasValidated ? 'Report confirmed' : 'This is right'}
     </Button>
   );
 }
