@@ -19,6 +19,13 @@
         "lat": 42.60175259999999,
         "lng": -71.3475218
       }
+    },
+    {
+      "placeId": 1,
+      "available": false,
+      "type": "at-home rapid antigen test",
+      "limit": null,
+      "id": 3
     }
   ],
   "reports": [

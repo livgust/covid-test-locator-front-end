@@ -26,31 +26,36 @@ function LocationSearch(props: {onPlaceSelect?: (place: Place) => any}) {
   const {latitude, longitude} = useContext(LocationContext)!;
   return (
     <>
-      <Box sx={{display: 'flex', alignItems: 'center'}}>
-        <TextField
-          label="Search for location"
-          value={searchTerm}
-          onChange={event => setSearchTerm(event.target.value)}
-          sx={{flexGrow: 1}}
-        />
-        <Button
-          disabled={!searchTerm.trim() || isSearching}
-          onClick={() => {
-            setIsSearching(true);
-            searchPlaces({
-              latitude,
-              longitude,
-              keyword: searchTerm.trim(),
-            }).then(results => {
-              setResults(results);
-              setIsSearching(false);
-            });
-          }}
-          sx={{ml: '5px'}}
-        >
-          Search
-        </Button>
-      </Box>
+      <form>
+        <Box sx={{display: 'flex', alignItems: 'center'}}>
+          <TextField
+            label="Search for location"
+            value={searchTerm}
+            onChange={event => setSearchTerm(event.target.value)}
+            sx={{flexGrow: 1}}
+            autoFocus
+          />
+          <Button
+            type="submit"
+            disabled={!searchTerm.trim() || isSearching}
+            onClick={event => {
+              event.preventDefault();
+              setIsSearching(true);
+              searchPlaces({
+                latitude,
+                longitude,
+                keyword: searchTerm.trim(),
+              }).then(results => {
+                setResults(results);
+                setIsSearching(false);
+              });
+            }}
+            sx={{ml: '5px'}}
+          >
+            Search
+          </Button>
+        </Box>
+      </form>
       {isSearching && <Typography>Searching . . .</Typography>}
       <List>
         {results.map(place => (

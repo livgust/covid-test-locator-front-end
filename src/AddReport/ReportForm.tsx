@@ -61,62 +61,68 @@ function ReportForm(props: {
 
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
-      <Typography variant="h5" component="h2">
-        Add report for {props.place.name}
-      </Typography>
-      <Typography variant="subtitle1">{props.place.vicinity}</Typography>
-      <br />
-      <Box sx={{display: 'flex', flexDirection: 'column'}}>
-        <FormControl required sx={{pb: 2}}>
-          <FormLabel component="legend">Test availability</FormLabel>
-          <RadioGroup
-            aria-label="test-availability"
-            name="test-availability"
-            value={testsAvailableRadio}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setTestsAvailableRadio((event.target as HTMLInputElement).value)
-            }
+      <form>
+        <Typography variant="h5" component="h2">
+          Add report for {props.place.name}
+        </Typography>
+        <Typography variant="subtitle1">{props.place.vicinity}</Typography>
+        <br />
+        <Box sx={{display: 'flex', flexDirection: 'column'}}>
+          <FormControl required sx={{pb: 2}}>
+            <FormLabel component="legend">Test availability</FormLabel>
+            <RadioGroup
+              aria-label="test-availability"
+              name="test-availability"
+              value={testsAvailableRadio}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setTestsAvailableRadio((event.target as HTMLInputElement).value)
+              }
+            >
+              <FormControlLabel
+                control={<Radio />}
+                label="Tests available"
+                value="Tests available"
+              />
+              <FormControlLabel
+                control={<Radio />}
+                label="No tests available"
+                value="No tests available"
+              />
+              <DateTimePicker
+                label="Date and time of report"
+                value={created}
+                onChange={setCreated}
+                maxDate={new Date()}
+                renderInput={(params: TextFieldProps) => (
+                  <TextField {...params} />
+                )}
+              />
+            </RadioGroup>
+          </FormControl>
+          <TextField
+            type="number"
+            value={limitNumber}
+            onChange={event => setLimitNumber(event.target.value)}
+            label="Limit per customer"
+            disabled={testsAvailableRadio === 'No tests available'}
+          />
+        </Box>
+        <DialogActions>
+          <Button
+            type="submit"
+            disabled={!formIsValid(testsAvailableRadio)}
+            onClick={event => {
+              event.preventDefault();
+              submitForm();
+            }}
           >
-            <FormControlLabel
-              control={<Radio />}
-              label="Tests available"
-              value="Tests available"
-            />
-            <FormControlLabel
-              control={<Radio />}
-              label="No tests available"
-              value="No tests available"
-            />
-            <DateTimePicker
-              label="Date and time of report"
-              value={created}
-              onChange={setCreated}
-              maxDate={new Date()}
-              renderInput={(params: TextFieldProps) => (
-                <TextField {...params} />
-              )}
-            />
-          </RadioGroup>
-        </FormControl>
-        <TextField
-          type="number"
-          value={limitNumber}
-          onChange={event => setLimitNumber(event.target.value)}
-          label="Limit per customer"
-          disabled={testsAvailableRadio === 'No tests available'}
-        />
-      </Box>
-      <DialogActions>
-        <Button
-          disabled={!formIsValid(testsAvailableRadio)}
-          onClick={submitForm}
-        >
-          Submit
-        </Button>
-        <Button color="secondary" onClick={props.onBack}>
-          Back
-        </Button>
-      </DialogActions>
+            Submit
+          </Button>
+          <Button color="secondary" onClick={props.onBack}>
+            Back
+          </Button>
+        </DialogActions>
+      </form>
     </LocalizationProvider>
   );
 }
