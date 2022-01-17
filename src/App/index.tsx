@@ -13,6 +13,7 @@ import {getPlaces} from '../api';
 import AddReport from '../AddReport';
 import PlacesList from '../PlacesList';
 import {Place} from '../types';
+import MenuButton from './Menu';
 
 import {ThemeProvider} from '@mui/material/styles';
 import themeTemplate from '../theme';
@@ -32,9 +33,12 @@ function Menu() {
     <nav>
       <AppBar position="fixed" component="div">
         <Toolbar>
-          <Typography variant="h5" component="h1">
-            Covid Test Collaborative
-          </Typography>
+          <Box sx={{display: 'flex', width: '100%', alignItems: 'center'}}>
+            <Typography variant="h5" component="h1" sx={{flexGrow: 1}}>
+              Covid Test Collaborative
+            </Typography>
+            <MenuButton />
+          </Box>
         </Toolbar>
       </AppBar>
       {/* workaround for spacing - see https://material-ui.com/components/app-bar/#fixed-placement */}
