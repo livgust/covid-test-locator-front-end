@@ -3,11 +3,14 @@ import {Place, Report} from '../types';
 import {addReport, addPlace} from '../api';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import DateAdapter from '@mui/lab/AdapterDateFns';
+import DateTimePicker from '@mui/lab/DateTimePicker';
 import DialogActions from '@mui/material/DialogActions';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
-import TextField from '@mui/material/TextField';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import TextField, {TextFieldProps} from '@mui/material/TextField';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Typography from '@mui/material/Typography';
@@ -24,6 +27,7 @@ function ReportForm(props: {
 }) {
   const [testsAvailableRadio, setTestsAvailableRadio] = useState<string>('');
   const [limitNumber, setLimitNumber] = useState<string>('');
+  const [created, setCreated] = useState<Date | null | undefined>();
   useEffect(() => {
     if (testsAvailableRadio === 'No tests available') {
       setLimitNumber('');
@@ -45,6 +49,7 @@ function ReportForm(props: {
           available: testsAvailableRadio === 'Tests available',
           type: 'at-home rapid antigen test',
           limit: parseInt(limitNumber),
+          created,
         } as Report)
       )
       .then(() => {});
@@ -55,7 +60,7 @@ function ReportForm(props: {
   };
 
   return (
-    <>
+    <LocalizationProvider dateAdapter={DateAdapter}>
       <Typography variant="h5" component="h2">
         Add report for {props.place.name}
       </Typography>
@@ -82,6 +87,15 @@ function ReportForm(props: {
               label="No tests available"
               value="No tests available"
             />
+            <DateTimePicker
+              label="Date and time of report"
+              value={created}
+              onChange={setCreated}
+              maxDate={new Date()}
+              renderInput={(params: TextFieldProps) => (
+                <TextField {...params} />
+              )}
+            />
           </RadioGroup>
         </FormControl>
         <TextField
@@ -103,7 +117,7 @@ function ReportForm(props: {
           Back
         </Button>
       </DialogActions>
-    </>
+    </LocalizationProvider>
   );
 }
 
