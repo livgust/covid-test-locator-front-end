@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-//import Button from '@mui/material/Button';
+import Button from '@mui/material/Button';
 import Dialog, {DialogProps} from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -16,15 +16,15 @@ export default function ButtonAppBar() {
 
   return (
     <>
-      {/* <Button
-        href="https://www.gofundme.com/f/wwwmacovidvaccinescom?utm_source=customer&utm_medium=copy_link&utm_campaign=p_cf+share-flow-1"
+      <Button
+        href="https://www.gofundme.com/f/covidtestcollabcom?utm_source=customer&utm_medium=copy_link&utm_campaign=p_cf+share-flow-1"
         target="_blank"
         rel="noreferrer"
         variant="text"
         sx={{color: 'secondary.contrastText', pr: 3}}
       >
         Contribute
-      </Button> */}
+      </Button>
       <IconButton
         edge="start"
         color="inherit"
