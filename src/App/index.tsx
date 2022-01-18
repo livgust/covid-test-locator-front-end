@@ -89,7 +89,10 @@ function MainComponent(props: {
 
   /** If we have browser permission already, grabs location on page load */
   useEffect(() => {
-    if (!props.location?.latitude || !props.location?.longitude) {
+    if (
+      (!props.location?.latitude || !props.location?.longitude) &&
+      navigator.permissions // some mobile browsers don't have navigator.permissions at all
+    ) {
       // if we're already allowed to get the user's location, do it.
       navigator.permissions
         .query({name: 'geolocation'})
