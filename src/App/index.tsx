@@ -57,7 +57,6 @@ function Menu() {
 export const LocationContext = createContext<userLocationType | undefined>(
   undefined
 );
-
 // location prop is for testing only.
 function MainComponent() {
   const [isLoading, setIsLoading] = useState(false);
@@ -81,8 +80,8 @@ function MainComponent() {
   /** If the location updates, trigger a search. */
   useEffect(() => {
     if (JSON.stringify(userLocation) !== JSON.stringify(previousUserLocation)) {
-      setIsLoading(true);
       if (userLocation) {
+        setIsLoading(true);
         getPlaces(userLocation).then(retrievedPlaces => {
           setPlaces(retrievedPlaces);
           setIsLoading(false);
@@ -104,93 +103,92 @@ function MainComponent() {
 
   return (
     <Box sx={{p: 1}}>
-      {isLoading ? (
-        <Box
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      ) : (
-        <>
-          <Paper sx={{p: 2}}>
-            <Typography variant="h5" component="h1">
-              Are COVID at-home tests available near you?
-            </Typography>
-            <Typography>
-              <b>Get information:</b> Find out where to get tests near you.
-              <br />
-              <b>Give information:</b> Update our records if you find stores
-              that have tests or stores that have sold out.
-            </Typography>
-          </Paper>
-          {(!userLocation ||
-            !userLocation?.latitude ||
-            !userLocation?.longitude) && (
-            <Alert severity="error" sx={{mt: 2}}>
-              Please set your location below to find stores with tests.{' '}
-            </Alert>
-          )}
-          <LocationContext.Provider value={userLocation}>
-            <form>
-              <Grid
-                columnSpacing={{xs: 5, sm: 15, md: 30}}
-                rowSpacing={1}
-                container
-                sx={{
-                  display: 'flex',
-                  width: '100%',
-                  justifyContent: 'center',
-                  pt: 2,
-                  alignItems: 'center',
-                }}
-              >
-                <Grid item sx={{display: 'flex', alignItems: 'center'}}>
-                  <Location
-                    onUserLocationSet={loc => {
-                      setUserLocation(loc);
-                      setIsLoading(false);
-                    }}
-                  />
-                </Grid>
-                <Grid item>
-                  <Fab
-                    variant="extended"
-                    onClick={() => setDialogOpen(true)}
-                    color="primary"
-                    aria-label="add"
-                    disabled={
-                      !userLocation ||
-                      !userLocation.latitude ||
-                      !userLocation.longitude
-                    }
-                  >
-                    <AddIcon />
-                    Add Report
-                  </Fab>
-                </Grid>
+      <>
+        <Paper sx={{p: 2}}>
+          <Typography variant="h5" component="h1">
+            Are COVID at-home tests available near you?
+          </Typography>
+          <Typography>
+            <b>Get information:</b> Find out where to get tests near you.
+            <br />
+            <b>Give information:</b> Update our records if you find stores that
+            have tests or stores that have sold out.
+          </Typography>
+        </Paper>
+        {(!userLocation ||
+          !userLocation?.latitude ||
+          !userLocation?.longitude) && (
+          <Alert severity="error" sx={{mt: 2}}>
+            Please set your location below to find stores with tests.{' '}
+          </Alert>
+        )}
+        <LocationContext.Provider value={userLocation}>
+          <form>
+            <Grid
+              columnSpacing={{xs: 5, sm: 15, md: 30}}
+              rowSpacing={1}
+              container
+              sx={{
+                display: 'flex',
+                width: '100%',
+                justifyContent: 'center',
+                pt: 2,
+                alignItems: 'center',
+              }}
+            >
+              <Grid item sx={{display: 'flex', alignItems: 'center'}}>
+                <Location
+                  onUserLocationSet={loc => {
+                    setUserLocation(loc);
+                    setIsLoading(false);
+                  }}
+                />
               </Grid>
-            </form>
-            <AddReport
-              place={dialogPlace}
-              open={dialogOpen}
-              onClose={() => setDialogOpen(false)}
-            />
+              <Grid item>
+                <Fab
+                  variant="extended"
+                  onClick={() => setDialogOpen(true)}
+                  color="primary"
+                  aria-label="add"
+                  disabled={
+                    !userLocation ||
+                    !userLocation.latitude ||
+                    !userLocation.longitude
+                  }
+                >
+                  <AddIcon />
+                  Add Report
+                </Fab>
+              </Grid>
+            </Grid>
+          </form>
+          <AddReport
+            place={dialogPlace}
+            open={dialogOpen}
+            onClose={() => setDialogOpen(false)}
+          />
+          {isLoading ? (
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
             <PlacesList {...{places}} />
-          </LocationContext.Provider>
-          <Box sx={{mt: 2}}>
-            <Typography variant="caption">
-              Content displayed is sourced by the community and not vetted by
-              Ora Innovations, LLC. The information shown may be outdated or
-              incorrect. This website is not affiliated with any government
-              entity.
-            </Typography>
-          </Box>
-        </>
-      )}
+          )}
+        </LocationContext.Provider>
+      </>
+      <Box sx={{mt: 2}}>
+        <Typography variant="caption">
+          Content displayed is sourced by the community and not vetted by Ora
+          Innovations, LLC. The information shown may be outdated or incorrect.
+          This website is not affiliated with any government entity.
+        </Typography>
+      </Box>
     </Box>
   );
 }
