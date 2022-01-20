@@ -17,8 +17,9 @@ function ValidateReport(props: {report: Report; afterValidate?: () => any}) {
         props.afterValidate?.();
       }}
       sx={{mr: 2}}
+      color="secondary"
     >
-      {hasValidated ? 'Report confirmed' : 'This is right'}
+      {hasValidated ? 'Report confirmed' : 'I agree'}
     </Button>
   );
 }

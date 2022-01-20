@@ -5,6 +5,8 @@ import {formatDistanceToNow} from 'date-fns';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Cancel from '@mui/icons-material/Cancel';
 import ValidateReport from './ValidateReport';
 import Button from '@mui/material/Button';
 import AddReport from '../AddReport';
@@ -37,14 +39,30 @@ function PlaceItem(props: {place: Place}) {
     (valA, valB) => (valA.created! > valB.created! ? -1 : 1)
   )?.[0];
   const availabilityText =
-    newestReport?.available && newestReport.limit
-      ? `Tests available - limit ${newestReport.limit} per customer`
-      : newestReport?.available
-      ? 'Tests available'
-      : 'Tests not available';
+    newestReport?.available && newestReport.limit ? (
+      <>
+        <CheckCircle />
+        &nbsp;Tests&nbsp;<b>are</b>&nbsp;available - limit {newestReport.limit}{' '}
+        per customer
+      </>
+    ) : newestReport?.available ? (
+      <>
+        <CheckCircle />
+        &nbsp;Tests&nbsp;<b>are</b>&nbsp;available
+      </>
+    ) : (
+      <>
+        <Cancel />
+        &nbsp;Tests are&nbsp;<b>not</b>&nbsp;available
+      </>
+    );
   const availabilityHtml = newestReport ? (
     <Typography
-      sx={{color: newestReport.available ? 'success.main' : 'text.secondary'}}
+      sx={{
+        color: newestReport.available ? 'success.main' : 'text.secondary',
+        display: 'flex',
+        alignItems: 'center',
+      }}
     >
       {availabilityText}
     </Typography>
@@ -101,7 +119,9 @@ function PlaceItem(props: {place: Place}) {
             />
           )}
           <Button color="secondary" onClick={() => setShowAddReport(true)}>
-            This isn't right
+            {newestReport?.available
+              ? 'I did not find tests here'
+              : 'I found tests here'}
           </Button>
         </CardContent>
       </Card>
