@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 import AddReport from '../AddReport';
 import {searchPlaces} from '../api';
 import {Place} from '../types';
@@ -36,20 +36,24 @@ beforeAll(() => {
 });
 
 it('shows location search if no place is passed in', () => {
-  render(
-    <LocationContext.Provider value={{latitude: 0, longitude: 0}}>
-      <AddReport open onClose={onClose} />
-    </LocationContext.Provider>
-  );
+  act(() => {
+    render(
+      <LocationContext.Provider value={{latitude: 0, longitude: 0}}>
+        <AddReport open onClose={onClose} />
+      </LocationContext.Provider>
+    );
+  });
   expect(screen.queryByText('Search')).toBeInTheDocument();
 });
 
 it('has expected modal copy & fields after search is completed', () => {
-  render(
-    <LocationContext.Provider value={{latitude: 0, longitude: 0}}>
-      <AddReport open onClose={onClose} place={{} as Place} />
-    </LocationContext.Provider>
-  );
+  act(() => {
+    render(
+      <LocationContext.Provider value={{latitude: 0, longitude: 0}}>
+        <AddReport open onClose={onClose} place={{} as Place} />
+      </LocationContext.Provider>
+    );
+  });
   expect(screen.queryByText('Add New Report')).toBeInTheDocument();
   expect(screen.queryByLabelText('Tests available')).toBeInTheDocument();
   expect(screen.queryByLabelText('No tests available')).toBeInTheDocument();

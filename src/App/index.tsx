@@ -1,34 +1,36 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useEffect, useRef, useState} from 'react';
 import {
   Alert,
   AppBar,
   Box,
-  Button,
   CircularProgress,
   Fab,
   Grid,
-  InputAdornment,
-  TextField,
+  Paper,
   Toolbar,
   Typography,
 } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 import AddIcon from '@mui/icons-material/Add';
-import {getPlaces, geocode, reverseGeocode} from '../api';
+import {getPlaces} from '../api';
 import AddReport from '../AddReport';
 import PlacesList from '../PlacesList';
 import {Place} from '../types';
 import MenuButton from './Menu';
+import Location from './Location';
+import {userLocationType} from '../locationUtils';
 
 import {ThemeProvider} from '@mui/material/styles';
 import themeTemplate from '../theme';
-import {MyLocation} from '@mui/icons-material';
 
 // location prop is for testing only.
-function App(props: {location?: {latitude: number; longitude: number}}) {
+function App() {
   return (
     <ThemeProvider theme={themeTemplate}>
-      <Menu />
-      <MainComponent location={props.location} />
+      <CssBaseline>
+        <Menu />
+        <MainComponent />
+      </CssBaseline>
     </ThemeProvider>
   );
 }
@@ -52,67 +54,42 @@ function Menu() {
   );
 }
 
-type userLocationType = {latitude: number; longitude: number} | undefined;
-
-export const LocationContext = createContext<userLocationType>(undefined);
+export const LocationContext = createContext<userLocationType | undefined>(
+  undefined
+);
 
 // location prop is for testing only.
-function MainComponent(props: {
-  location?: {latitude: number; longitude: number};
-}) {
-  const [isLoading, setIsLoading] = useState(true);
+function MainComponent() {
+  const [isLoading, setIsLoading] = useState(false);
   const [places, setPlaces] = useState<Place[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogPlace, setDialogPlace] = useState<Place | undefined>();
-  const [userLocation, setUserLocation] = useState<userLocationType>(
-    props.location
-  );
-  const [userLocationString, setUserLocationString] = useState<
-    string | undefined
+  const [userLocation, setUserLocation] = useState<
+    userLocationType | undefined
   >();
 
-  /** Gets location from browser and then puts a pretty string in the text box. */
-  const getAndSetLocation = () => {
-    navigator.geolocation.getCurrentPosition(geo => {
-      const {latitude, longitude} = geo.coords;
-      reverseGeocode({latitude, longitude}).then(setUserLocationString);
-      setLocation(latitude, longitude);
+  const usePrevious = (value: any) => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
     });
+    return ref.current;
   };
 
-  /** Sets the user location, triggering a search */
-  const setLocation = (latitude: number, longitude: number) => {
-    setUserLocation({latitude, longitude});
-    setIsLoading(false);
-    setPlaces([]);
-  };
-
-  /** If we have browser permission already, grabs location on page load */
-  useEffect(() => {
-    if (
-      (!props.location?.latitude || !props.location?.longitude) &&
-      navigator.permissions // some mobile browsers don't have navigator.permissions at all
-    ) {
-      // if we're already allowed to get the user's location, do it.
-      navigator.permissions
-        .query({name: 'geolocation'})
-        .then((status: PermissionStatus) => {
-          if (status.state === 'granted') {
-            getAndSetLocation();
-          }
-        });
-    }
-    return;
-  }, []);
+  const previousUserLocation = usePrevious(userLocation);
 
   /** If the location updates, trigger a search. */
   useEffect(() => {
-    setIsLoading(true);
-    if (userLocation) {
-      getPlaces(userLocation).then(retrievedPlaces => {
-        setPlaces(retrievedPlaces);
+    if (JSON.stringify(userLocation) !== JSON.stringify(previousUserLocation)) {
+      setIsLoading(true);
+      if (userLocation) {
+        getPlaces(userLocation).then(retrievedPlaces => {
+          setPlaces(retrievedPlaces);
+          setIsLoading(false);
+        });
+      } else {
         setIsLoading(false);
-      });
+      }
     } else {
       setIsLoading(false);
     }
@@ -126,7 +103,7 @@ function MainComponent(props: {
   }, [dialogOpen]);
 
   return (
-    <div>
+    <Box sx={{p: 1}}>
       {isLoading ? (
         <Box
           sx={{
@@ -139,26 +116,22 @@ function MainComponent(props: {
         </Box>
       ) : (
         <>
-          <Alert severity="info">
-            CovidTestCollab.com hosts a crowd-sourced list of at-home COVID
-            rapid tests available for purchase in-store. If you know that a
-            store near you does or does not have tests available, please add a
-            report by clicking the + icon below.
-          </Alert>
+          <Paper sx={{p: 2}}>
+            <Typography variant="h5" component="h1">
+              Are COVID at-home tests available near you?
+            </Typography>
+            <Typography>
+              <b>Get information:</b> Find out where to get tests near you.
+              <br />
+              <b>Give information:</b> Update our records if you find stores
+              that have tests or stores that have sold out.
+            </Typography>
+          </Paper>
           {(!userLocation ||
             !userLocation?.latitude ||
             !userLocation?.longitude) && (
             <Alert severity="error" sx={{mt: 2}}>
-              Please set your location. If you do not see a prompt for this page
-              to get your location,{' '}
-              <a
-                href="https://www.lifewire.com/denying-access-to-your-location-4027789"
-                target="_blank"
-                rel="noreferrer"
-              >
-                click here for instructions
-              </a>
-              .
+              Please set your location below to find stores with tests.{' '}
             </Alert>
           )}
           <LocationContext.Provider value={userLocation}>
@@ -175,6 +148,14 @@ function MainComponent(props: {
                   alignItems: 'center',
                 }}
               >
+                <Grid item sx={{display: 'flex', alignItems: 'center'}}>
+                  <Location
+                    onUserLocationSet={loc => {
+                      setUserLocation(loc);
+                      setIsLoading(false);
+                    }}
+                  />
+                </Grid>
                 <Grid item>
                   <Fab
                     variant="extended"
@@ -191,49 +172,6 @@ function MainComponent(props: {
                     Add Report
                   </Fab>
                 </Grid>
-                <Grid item sx={{display: 'flex', alignItems: 'center'}}>
-                  <TextField
-                    sx={{pr: 1}}
-                    label="My location"
-                    value={userLocationString}
-                    onChange={event =>
-                      setUserLocationString(event.target.value)
-                    }
-                    autoFocus
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment
-                          onClick={() => {
-                            getAndSetLocation();
-                          }}
-                          sx={{cursor: 'pointer'}}
-                          position="end"
-                        >
-                          <MyLocation />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <Button
-                    type="submit"
-                    disabled={!userLocationString}
-                    onClick={event => {
-                      event.preventDefault();
-                      geocode(userLocationString!)
-                        .then(({latitude, longitude, formattedAddress}) => {
-                          setLocation(latitude, longitude);
-                          setUserLocationString(formattedAddress);
-                        })
-                        .catch(() => {
-                          console.error(
-                            `unable to reverse geocode ${userLocationString}`
-                          );
-                        });
-                    }}
-                  >
-                    Set
-                  </Button>
-                </Grid>
               </Grid>
             </form>
             <AddReport
@@ -243,15 +181,17 @@ function MainComponent(props: {
             />
             <PlacesList {...{places}} />
           </LocationContext.Provider>
-          <Typography variant="caption">
-            Content displayed is sourced by the community and not vetted by Ora
-            Innovations, LLC. The information shown may be outdated or
-            incorrect. This website is not affiliated with any government
-            entity.
-          </Typography>
+          <Box sx={{mt: 2}}>
+            <Typography variant="caption">
+              Content displayed is sourced by the community and not vetted by
+              Ora Innovations, LLC. The information shown may be outdated or
+              incorrect. This website is not affiliated with any government
+              entity.
+            </Typography>
+          </Box>
         </>
       )}
-    </div>
+    </Box>
   );
 }
 

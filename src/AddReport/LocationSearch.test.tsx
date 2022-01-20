@@ -50,8 +50,10 @@ it('shows results', async () => {
     </LocationContext.Provider>
   );
   expect(screen.getByLabelText('Search for location')).toBeInTheDocument();
-  fireEvent.change(screen.getByLabelText('Search for location'), {
-    target: {value: 'cvs pharmacy'},
+  act(() => {
+    fireEvent.change(screen.getByLabelText('Search for location'), {
+      target: {value: 'cvs pharmacy'},
+    });
   });
   act(() => {
     screen.getByText('Search').click();
@@ -73,8 +75,10 @@ it('passes place info back up the chain', async () => {
       <LocationSearch onPlaceSelect={returnFn} />
     </LocationContext.Provider>
   );
-  fireEvent.change(screen.getByLabelText('Search for location'), {
-    target: {value: 'cvs pharmacy'},
+  act(() => {
+    fireEvent.change(screen.getByLabelText('Search for location'), {
+      target: {value: 'cvs pharmacy'},
+    });
   });
   act(() => {
     screen.getByText('Search').click();

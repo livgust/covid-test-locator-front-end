@@ -3,22 +3,22 @@
   "name": "COVID Test Locator",
   "icons": [
     {
-      "src": "favicon/favicon-16x16",
+      "src": "favicon/favicon-16x16.png",
       "sizes": "16x16",
       "type": "image/png"
     },
     {
-      "src": "favicon/favicon-32x32",
+      "src": "favicon/favicon-32x32.png",
       "sizes": "64x64 32x32 24x24",
       "type": "image/png"
     },
     {
-      "src": "favicon/android-chrome-192x192",
+      "src": "favicon/android-chrome-192x192.png",
       "sizes": "192x192 64x64",
       "type": "image/png"
     },
     {
-      "src": "favicon/android-chrome-512x512",
+      "src": "favicon/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
