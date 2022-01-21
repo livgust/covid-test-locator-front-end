@@ -3,6 +3,7 @@ import {render, screen} from '@testing-library/react';
 import PlacesList from '../PlacesList';
 import {Place} from '../types';
 import {format} from 'date-fns';
+import withMarkup from '../testHelper';
 
 describe('basic display', () => {
   it('shows the name of each place', () => {
@@ -39,8 +40,7 @@ describe('basic display', () => {
   });
 });
 
-// TODO: fix these 2 tests now that we have <b> tags
-it.skip('shows if there is availability', () => {
+it('shows if there is availability', () => {
   const places = [
     {
       id: 1,
@@ -49,12 +49,11 @@ it.skip('shows if there is availability', () => {
     } as any as Place,
   ];
   render(<PlacesList places={places} />);
-  expect(
-    screen.queryByText('Tests are available', {exact: false})
-  ).toBeInTheDocument();
+  const getByTextWithMarkup = withMarkup(screen.getByText);
+  expect(getByTextWithMarkup('Tests are available')).toBeInTheDocument();
 });
 
-it.skip('shows if there is not availability', () => {
+it('shows if there is not availability', () => {
   const places = [
     {
       id: 2,
@@ -63,9 +62,8 @@ it.skip('shows if there is not availability', () => {
     } as any as Place,
   ];
   render(<PlacesList places={places} />);
-  expect(
-    screen.queryByText('Tests are not available', {exact: false})
-  ).toBeInTheDocument();
+  const getByTextWithMarkup = withMarkup(screen.getByText);
+  expect(getByTextWithMarkup('Tests are not available')).toBeInTheDocument();
 });
 
 it('shows if no data is reported', () => {

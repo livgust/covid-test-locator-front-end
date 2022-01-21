@@ -48,12 +48,16 @@ function PlaceItem(props: {place: Place}) {
     ) : newestReport?.available ? (
       <>
         <CheckCircle />
-        &nbsp;Tests&nbsp;<b>are</b>&nbsp;available
+        <span>
+          Tests <b>are</b> available
+        </span>
       </>
     ) : (
       <>
         <Cancel />
-        &nbsp;Tests are&nbsp;<b>not</b>&nbsp;available
+        <span>
+          Tests are <b>not</b> available
+        </span>
       </>
     );
   const availabilityHtml = newestReport ? (
