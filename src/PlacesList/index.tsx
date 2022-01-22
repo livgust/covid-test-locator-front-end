@@ -101,7 +101,11 @@ function PlaceItem(props: {place: Place}) {
           <Typography variant="h4" component="h1">
             {place.name}
           </Typography>
-          <Typography variant="subtitle1">{place.vicinity}</Typography>
+          <Typography variant="subtitle1">
+            {place.vicinity}{' '}
+            {place.distance &&
+              `(${Math.round(place.distance * 10) / 10} miles)`}
+          </Typography>
           {availabilityHtml}
           {reportedCopy}
           {newestReport && (

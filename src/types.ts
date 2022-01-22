@@ -8,6 +8,7 @@ export type Place = {
     long: number;
   };
   reports?: Report[];
+  distance?: number;
 };
 
 /**

@@ -38,6 +38,22 @@ describe('basic display', () => {
       screen.queryByText('123 Easy Street, Emerald City')
     ).toBeInTheDocument();
   });
+
+  it('shows rounded distance', () => {
+    const places = [
+      {
+        id: 1,
+        name: 'Walgreens',
+        vicinity: '123 Easy Street, Emerald City',
+        reports: [],
+        distance: 1.352,
+      } as any as Place,
+    ];
+    render(<PlacesList places={places} />);
+    expect(
+      screen.queryByText('(1.4 miles)', {exact: false})
+    ).toBeInTheDocument();
+  });
 });
 
 it('shows if there is availability', () => {
