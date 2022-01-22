@@ -10,15 +10,17 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
-import AddIcon from '@mui/icons-material/Add';
 import {getPlaces} from '../api';
-import AddReport from '../AddReport';
-import PlacesList from '../PlacesList';
 import {Place} from '../types';
-import MenuButton from './Menu';
-import Location from './Location';
 import {userLocationType} from '../locationUtils';
+import AddIcon from '@mui/icons-material/Add';
+import AddReport from '../AddReport';
+import CssBaseline from '@mui/material/CssBaseline';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Location from './Location';
+import MenuButton from './Menu';
+import PlacesList from '../PlacesList';
+import Switch from '@mui/material/Switch';
 
 import {ThemeProvider} from '@mui/material/styles';
 import themeTemplate from '../theme';
@@ -63,9 +65,19 @@ function MainComponent() {
   const [places, setPlaces] = useState<Place[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogPlace, setDialogPlace] = useState<Place | undefined>();
+  const [showAvailableOnly, setShowAvailableOnly] = useState(true);
   const [userLocation, setUserLocation] = useState<
     userLocationType | undefined
   >();
+
+  const filteredPlaces = showAvailableOnly
+    ? places.filter(place => {
+        const newestReport = place!.reports!.sort((repA, repB) =>
+          repA.created! > repB.created! ? -1 : 1
+        )?.[0];
+        return newestReport?.available;
+      })
+    : places;
 
   const usePrevious = (value: any) => {
     const ref = useRef();
@@ -178,7 +190,32 @@ function MainComponent() {
               <CircularProgress />
             </Box>
           ) : (
-            <PlacesList {...{places}} />
+            <>
+              <Grid container>
+                <Grid item xs={0} sm={2} md={3} />
+                <Grid item xs={12} sm={8} md={6} sx={{m: 2}}>
+                  <Typography>
+                    Showing stores within 50 miles.
+                    <br />
+                  </Typography>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={showAvailableOnly}
+                        onChange={event =>
+                          setShowAvailableOnly(event.target.checked)
+                        }
+                      />
+                    }
+                    label="Only show stores with tests"
+                  />
+                  <br />
+                  <br />
+                  <PlacesList {...{places: filteredPlaces}} />
+                </Grid>
+                <Grid item xs={0} sm={2} md={3} />
+              </Grid>
+            </>
           )}
         </LocationContext.Provider>
       </>

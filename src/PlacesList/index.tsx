@@ -1,28 +1,24 @@
-import Typography from '@mui/material/Typography';
 import React, {useState} from 'react';
 import {Place} from '../types';
 import {formatDistanceToNow} from 'date-fns';
-import Grid from '@mui/material/Grid';
+import AddReport from '../AddReport';
+import Button from '@mui/material/Button';
+import Cancel from '@mui/icons-material/Cancel';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CheckCircle from '@mui/icons-material/CheckCircle';
-import Cancel from '@mui/icons-material/Cancel';
+import Typography from '@mui/material/Typography';
 import ValidateReport from './ValidateReport';
-import Button from '@mui/material/Button';
-import AddReport from '../AddReport';
 
 function PlacesList(props: {places: Place[]}) {
-  const sideColumn = <Grid item xs={0} sm={2} md={3} />;
   return (
-    <Grid container>
-      {sideColumn}
-      <Grid item xs={12} sm={8} md={6}>
-        {props.places.map(place => (
-          <PlaceItem place={place} key={place.id} />
-        ))}
-      </Grid>
-      {sideColumn}
-    </Grid>
+    <>
+      {props.places.length ? (
+        props.places.map(place => <PlaceItem place={place} key={place.id} />)
+      ) : (
+        <Typography>No results.</Typography>
+      )}
+    </>
   );
 }
 
@@ -96,7 +92,7 @@ function PlaceItem(props: {place: Place}) {
 
   return (
     <>
-      <Card sx={{margin: 2}}>
+      <Card>
         <CardContent>
           <Typography variant="h4" component="h1">
             {place.name}

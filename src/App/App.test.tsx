@@ -50,21 +50,28 @@ describe('Initialization logic', () => {
     );
   });
 
-  it('passes reports to list component', async () => {
+  it('passes and filters reports to list component', async () => {
     let placesListPlacesProp: any;
     (PlacesList as jest.Mock).mockImplementation((props: any) => {
       placesListPlacesProp = props.places;
       return <></>;
     });
     (getPlaces as jest.Mock).mockImplementation(async () => {
-      return ['report 1', 'report 2'];
+      return [
+        {reports: [{available: true}]},
+        {reports: [{available: true}]},
+        {reports: [{available: false}]},
+      ];
     });
     act(() => {
       render(<App />);
     });
     await waitFor(() => expect(getPlaces).toHaveBeenCalled());
     await waitFor(() =>
-      expect(placesListPlacesProp).toEqual(['report 1', 'report 2'])
+      expect(placesListPlacesProp).toEqual([
+        {reports: [{available: true}]},
+        {reports: [{available: true}]},
+      ])
     );
   });
 });
