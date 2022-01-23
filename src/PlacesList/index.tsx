@@ -92,7 +92,7 @@ function PlaceItem(props: {place: Place}) {
 
   return (
     <>
-      <Card>
+      <Card sx={{mt: 2, mb: 2}}>
         <CardContent>
           <Typography variant="h4" component="h1">
             {place.name}

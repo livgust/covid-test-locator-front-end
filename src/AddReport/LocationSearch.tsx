@@ -21,7 +21,7 @@ import {LocationContext} from '../App';
  */
 function LocationSearch(props: {onPlaceSelect?: (place: Place) => any}) {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [results, setResults] = useState<Place[]>([]);
+  const [results, setResults] = useState<Place[] | undefined>(undefined);
   const [isSearching, setIsSearching] = useState(false);
   const {latitude, longitude} = useContext(LocationContext)!;
   return (
@@ -57,39 +57,50 @@ function LocationSearch(props: {onPlaceSelect?: (place: Place) => any}) {
         </Box>
       </form>
       {isSearching && <Typography>Searching . . .</Typography>}
-      <List>
-        {results.map(place => (
-          <div key={place.googlePlaceId}>
-            <ListItem>
-              <Box sx={{display: 'flex', alignItems: 'center', width: '100%'}}>
-                <Box sx={{flexGrow: 1}}>
-                  <ListItemText>
-                    <Typography variant="h5" component="div">
-                      {place.name}
-                    </Typography>
-                    <Typography variant="subtitle1" component="div">
-                      {place.vicinity}
-                    </Typography>
-                  </ListItemText>
+      {results && !results.length && !isSearching ? (
+        <Box sx={{pt: 2}}>
+          <Typography>
+            No results found. Please try a different search, such as "CVS
+            Cambridge MA."
+          </Typography>
+        </Box>
+      ) : (
+        <List>
+          {(results || []).map(place => (
+            <div key={place.googlePlaceId}>
+              <ListItem>
+                <Box
+                  sx={{display: 'flex', alignItems: 'center', width: '100%'}}
+                >
+                  <Box sx={{flexGrow: 1}}>
+                    <ListItemText>
+                      <Typography variant="h5" component="div">
+                        {place.name}
+                      </Typography>
+                      <Typography variant="subtitle1" component="div">
+                        {place.vicinity}
+                      </Typography>
+                    </ListItemText>
+                  </Box>
+                  <Box>
+                    <Button
+                      color="secondary"
+                      onClick={async () => {
+                        if (props.onPlaceSelect) {
+                          props.onPlaceSelect(place);
+                        }
+                      }}
+                    >
+                      Select
+                    </Button>
+                  </Box>
                 </Box>
-                <Box>
-                  <Button
-                    color="secondary"
-                    onClick={async () => {
-                      if (props.onPlaceSelect) {
-                        props.onPlaceSelect(place);
-                      }
-                    }}
-                  >
-                    Select
-                  </Button>
-                </Box>
-              </Box>
-            </ListItem>
-            <Divider />
-          </div>
-        ))}
-      </List>
+              </ListItem>
+              <Divider />
+            </div>
+          ))}
+        </List>
+      )}
     </>
   );
 }
