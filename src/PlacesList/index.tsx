@@ -102,6 +102,9 @@ function PlaceItem(props: {place: Place}) {
             {place.distance &&
               `(${Math.round(place.distance * 10) / 10} miles)`}
           </Typography>
+          {place.phoneNumber && (
+            <Typography variant="subtitle1">{place.phoneNumber}</Typography>
+          )}
           {availabilityHtml}
           {reportedCopy}
           {newestReport && (

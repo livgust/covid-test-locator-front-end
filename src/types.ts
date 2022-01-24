@@ -9,6 +9,8 @@ export type Place = {
   };
   reports?: Report[];
   distance?: number;
+  phoneNumber?: string;
+  website?: string;
 };
 
 /**
