@@ -16,7 +16,7 @@ export default function ButtonAppBar() {
 
   return (
     <>
-      <Button
+      {/* <Button
         href="https://www.gofundme.com/f/covidtestcollabcom?utm_source=customer&utm_medium=copy_link&utm_campaign=p_cf+share-flow-1"
         target="_blank"
         rel="noreferrer"
@@ -24,7 +24,7 @@ export default function ButtonAppBar() {
         sx={{color: 'secondary.contrastText', pr: 3}}
       >
         Contribute
-      </Button>
+      </Button> */}
       <IconButton
         edge="start"
         color="inherit"
